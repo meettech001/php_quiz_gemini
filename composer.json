@@ -1,0 +1,16 @@
+{
+  "name": "mvp/php-quiz-builder",
+  "require": {
+    "php": ">=8.0",
+    "slim/slim": "^4.10",
+    "slim/psr7": "^1.6",
+    "guzzlehttp/guzzle": "^7.0",
+    "vlucas/phpdotenv": "^5.5",
+    "php-di/php-di": "^7.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  php-gemini:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9090:80"
+    volumes:
+      - ./:/var/www/html
+      - ./database:/var/www/html/database

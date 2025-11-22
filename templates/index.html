@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>PHP Gemini AI Quiz Builder</h2>
+<input id="topic" value="Neural Networks"/>
+<button onclick="gen()">Generate</button>
+
+<div id="quiz"></div>
+
+<script>
+async function gen(){
+    let topic=document.getElementById('topic').value;
+
+    let r=await fetch('/generate',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({topic})
+    });
+
+    let d=await r.json();
+    window.quiz=d;
+
+    let html='';
+    d.questions.forEach((x,i)=>{
+        html+=`<b>${x.q}</b><br>`;
+        for(let k in x.options){
+            html+=`<label><input name='q${i}' type='radio' value='${k}'> ${k}: ${x.options[k]}</label><br>`;
+        }
+    });
+    html+=`<button onclick='submitQuiz()'>Submit</button>`;
+    document.getElementById('quiz').innerHTML=html;
+}
+
+async function submitQuiz(){
+    let answers={};
+    quiz.questions.forEach((x,i)=>{
+        let r=document.querySelector(`input[name='q${i}']:checked`);
+        if(r) answers[i]=r.value;
+    });
+
+    let r=await fetch('/submit',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({quiz,answers,topic:document.getElementById('topic').value})
+    });
+
+    let d=await r.json();
+    document.getElementById('quiz').innerHTML=`<h3>Score: ${d.score}/${d.total}</h3>`;
+}
+</script>
+</body>
+</html>
